@@ -17,9 +17,11 @@ logo = f"""
 ─────────────────────╚══╝
 \033[1;34m
 ================================================
- \033[1;32m     author    : rahatmals 
+\033[1;32m 
+      author    : rahatmals 
       GitHub    : github.com/rahatmals1
-\033[1;34m================================================"""
+\033[1;34m
+================================================"""
 proxy_list = open('proxy.txt','r').read().splitlines()
 # get Captcha token 
 def get_token():
