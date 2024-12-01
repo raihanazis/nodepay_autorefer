@@ -25,7 +25,7 @@ pip install -r requirements.txt
 
 ⚠️ Open Via Browser & Run Captcha Solver for get captcha token
 ```
-python main.py
+python app.py
 ```
 ```
 nano proxy.txt
