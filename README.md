@@ -1,19 +1,6 @@
 ### ⚙️&nbsp; Instaction
 <img align="center" alt="line" src="https://github.com/DalpatRathore/dalpatrathore/blob/main/assets/images/line-2.svg"> 
 
-```
-pkg update && pkg upgrade -y
-```
-```
-pkg install python
-```
-```
-pkg install git
-```
-```
-pkg install nano
-```
-```
 git clone --depth=1 https://github.com/rahatmals1/nodepay_autorefer
 ```
 ```
@@ -44,7 +31,7 @@ https://app.nodepay.ai/login
 ```
 
 
-### ⚙️&nbsp; Captcha Solver JavaScript / use via browser
+### ⚙️&nbsp; Captcha Solver JavaScript / use via browser (Using Tempermonkey)
 
 ```javascript
 
