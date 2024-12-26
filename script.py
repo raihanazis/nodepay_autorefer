@@ -6,31 +6,17 @@ import requests
 def linex():
     print('\033[0m================================================')
 # Logo For script 
-logo = f"""
-╔═╗─╔╗────╔╗──╔═══╗
-║║╚╗║║────║║──║╔═╗║
-║╔╗╚╝╠══╦═╝╠══╣╚═╝╠══╦╗─╔╗
-║║╚╗║║╔╗║╔╗║║═╣╔══╣╔╗║║─║║
-║║─║║║╚╝║╚╝║║═╣║──║╔╗║╚═╝║
-╚╝─╚═╩══╩══╩══╩╝──╚╝╚╩═╗╔╝
-─────────────────────╔═╝║
-─────────────────────╚══╝
-\033[1;34m
-================================================
-\033[1;32m 
-      author    : rahatmals 
-      GitHub    : github.com/rahatmals1
-\033[1;34m
-================================================"""
+logo = f"Modifed By Raihan"
 proxy_list = open('proxy.txt','r').read().splitlines()
 # get Captcha token 
 def get_token():
     while True:
-         res = requests.get(f'http://localhost:5000/get').text
+         res = requests.get(f'http://127.0.0.1:5000/get').text
          if not 'None' in res:
               print(f'\r\r\033[0m>>\033[1;32m Captcha token get successful \033[0m')
               return res
          else:time.sleep(0.5)
+         print(res)
 # clear terminal session & print logo
 def clear_screen():
     if sys.platform.startswith('win'):
@@ -78,7 +64,7 @@ def reg_accaunt(email, password, username, ref_code, proxy_url=None, captcha_tok
        response.raise_for_status()
        return response.json()
    except Exception as e:
-       print(f'\r\r\033[31m⚠️ Error: {str(e)} \033[0m');linex();time.sleep(1)
+       print(f'\r\r\033[31m Error: {str(e)} \033[0m');linex();time.sleep(1)
 # login account and age authorization token
 def login_acccaunts(email, password, captcha_token,proxy_url):
    try:
@@ -95,7 +81,7 @@ def login_acccaunts(email, password, captcha_token,proxy_url):
        response.raise_for_status()
        return response.json()
    except Exception as e:
-       print(f'\r\r\033[31m⚠️ Error: {str(e)} \033[0m');linex();time.sleep(1)
+       print(f'\r\r\033[31m Error: {str(e)} \033[0m');linex();time.sleep(1)
 # active account and confirmation 
 def active_recent_accaunt(auth_token,proxy_url):
    try:
@@ -111,14 +97,13 @@ def active_recent_accaunt(auth_token,proxy_url):
            response = requests.post(url, headers=headers,json=json_data,proxies=proxy_url,timeout=5)
        return response.json()
    except Exception as e:
-       print(f'\r\r\033[31m⚠️ Error: {str(e)} \033[0m');linex();time.sleep(1)
+       print(f'\r\r\033[31m Error: {str(e)} \033[0m');linex();time.sleep(1)
 
 # main def for possess full action
 def main():
     clear_screen()
-    try:reff_limit = int(input('\033[0m>>\033[1;32m Put Your Reff Amount: '))
-    except:print('\033[1;32m⚠️ Input Wrong Default Reff Amaunt is 1k ');reff_limit=1000;time.sleep(1)
-    ref_code = input("\033[0m>>\033[1;32m Input referral code : ")
+    reff_limit = 1000
+    ref_code = "4dhJEQNW9mPd6AZ"
     clear_screen();success_crt = 0
     for atm in range(reff_limit):
         try:
@@ -147,17 +132,17 @@ def main():
                          success_crt+=1
                          open('accaunts.txt','a').write(f"{str(email)}|{str(password)}|{str(auth_token)}\n");time.sleep(1)
                     else:
-                        print(f'\r\r\033[1;31m🌲 Referral Error, Not Success \033[0m {response_data["msg"]}');time.sleep(1)
+                        print(f'\r\r\033[1;31m Referral Error, Not Success \033[0m {response_data["msg"]}');time.sleep(1)
                         linex()
                 else:
-                    print(f'\r\r\033[1;31m🌲 Account Login Failed \033[0m {response_data["msg"]}');time.sleep(1)
+                    print(f'\r\r\033[1;31m Account Login Failed \033[0m {response_data["msg"]}');time.sleep(1)
                     linex()
             else:
-                print(f'\r\r\033[1;31m🌲 Account Create Failed \033[0m {response_data["msg"]}');time.sleep(1)
+                print(f'\r\r\033[1;31m Account Create Failed \033[0m {response_data["msg"]}');time.sleep(1)
                 linex()
             linex()
         except Exception as e:
-            print(f'\r\r\033[31m⚠️ Error: {str(e)} \033[0m');linex();time.sleep(1)
+            print(f'\r\r\033[31m Error: {str(e)} \033[0m');linex();time.sleep(1)
     print('\r\r\033[0m>>\033[1;32m Your Referral Completed \033[0m')
     exit()
 main()
