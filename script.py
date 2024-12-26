@@ -1,4 +1,4 @@
-import os, sys, random, string, time
+import os, sys, random, string, time, uuid
 try:import requests
 except:os.system('pip install requests')
 import requests
@@ -98,6 +98,27 @@ def active_recent_accaunt(auth_token,proxy_url):
        return response.json()
    except Exception as e:
        print(f'\r\r\033[31m Error: {str(e)} \033[0m');linex();time.sleep(1)
+# pinging accaunts 
+def ping_accaunt(auth_token,userid,proxy_url):
+   try:
+       json_data={
+        'id': userid,
+        'browser_id': str(uuid.uuid4()),
+        'timestamp': int(time.time()),
+        'version': '2.2.7'
+       }
+       url = "http://nw.nodepay.ai/api/network/ping"
+       headers = get_headers(auth_token)
+       proxy_url = {'http': proxy_url,'https': proxy_url}
+       response = requests.post(url, headers=headers,json=json_data,proxies=proxy_url,timeout=5)
+       response.raise_for_status()
+       if not response.json()['msg'] == 'Success':
+           response = requests.post(url, headers=headers,json=json_data,proxies=proxy_url,timeout=5)
+       if not response.json()['msg'] == 'Success':
+           response = requests.post(url, headers=headers,json=json_data,proxies=proxy_url,timeout=5)
+       return response.json()
+   except Exception as e:
+       print(f'\r\r\033[31m Error: {str(e)} \033[0m');linex();time.sleep(1)
 
 # main def for possess full action
 def main():
@@ -125,12 +146,20 @@ def main():
                 if response_data['msg'] == 'Success':
                     print(f'\r\r\033[0m>>\033[1;32m Account Login Successfuly \033[0m')
                     auth_token = response_data['data']['token']
+                    userid = response_data['data']['uid']
                     response_data = active_recent_accaunt(auth_token,proxy_url)
                     #print(response_data)
                     if response_data['msg'] == 'Success':
                          print(f'\r\r\033[0m>>\033[1;32m Successfuly Referral Done \033[0m')
-                         success_crt+=1
                          open('accaunts.txt','a').write(f"{str(email)}|{str(password)}|{str(auth_token)}\n");time.sleep(1)
+                         response_data = ping_accaunt(auth_token,userid,proxy_url)
+                         if response_data['msg'] == 'Success':
+                            print(f'\r\r\033[0m>>\033[1;32m Ping Account Successfuly \033[0m')
+                            print(f'{response_data}');time.sleep(1)
+                            success_crt+=1
+                         else:
+                            print(f'\r\r\033[1;31m Ping Account Failed \033[0m {response_data["msg"]}');time.sleep(1)
+                            linex()
                     else:
                         print(f'\r\r\033[1;31m Referral Error, Not Success \033[0m {response_data["msg"]}');time.sleep(1)
                         linex()
