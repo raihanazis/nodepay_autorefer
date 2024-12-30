@@ -1,4 +1,5 @@
-import os, sys, random, string, time
+from faker import Faker
+import os, sys, random, string, time, uuid
 try:import requests
 except:os.system('pip install requests')
 import requests
@@ -6,7 +7,7 @@ import requests
 def linex():
     print('\033[0m================================================')
 # Logo For script 
-logo = f"Modifed By Raihan"
+logo = f"Modified By YLAS"
 proxy_list = open('proxy.txt','r').read().splitlines()
 # get Captcha token 
 def get_token():
@@ -16,7 +17,6 @@ def get_token():
               print(f'\r\r\033[0m>>\033[1;32m Captcha token get successful \033[0m')
               return res
          else:time.sleep(0.5)
-         print(res)
 # clear terminal session & print logo
 def clear_screen():
     if sys.platform.startswith('win'):
@@ -86,7 +86,28 @@ def login_acccaunts(email, password, captcha_token,proxy_url):
 def active_recent_accaunt(auth_token,proxy_url):
    try:
        json_data={}
-       url = "https://api.nodepay.ai/api/auth/active-account"
+       url = "http://api.nodepay.ai/api/auth/active-account"
+       headers = get_headers(auth_token)
+       proxy_url = {'http': proxy_url,'https': proxy_url}
+       response = requests.post(url, headers=headers,json=json_data,proxies=proxy_url,timeout=10)
+       response.raise_for_status()
+       if not response.json()['msg'] == 'Success':
+           response = requests.post(url, headers=headers,json=json_data,proxies=proxy_url,timeout=10)
+       if not response.json()['msg'] == 'Success':
+           response = requests.post(url, headers=headers,json=json_data,proxies=proxy_url,timeout=10)
+       return response.json()
+   except Exception as e:
+       print(f'\r\r\033[31m Error: {str(e)} \033[0m');linex();time.sleep(1)
+# pinging accaunts 
+def ping_accaunt(auth_token,userid,proxy_url):
+   try:
+       json_data={
+        'id': userid,
+        'browser_id': str(uuid.uuid4()),
+        'timestamp': int(time.time()),
+        'version': '2.2.7'
+       }
+       url = "http://nw.nodepay.ai/api/network/ping"
        headers = get_headers(auth_token)
        proxy_url = {'http': proxy_url,'https': proxy_url}
        response = requests.post(url, headers=headers,json=json_data,proxies=proxy_url,timeout=10)
@@ -102,17 +123,19 @@ def active_recent_accaunt(auth_token,proxy_url):
 # main def for possess full action
 def main():
     clear_screen()
-    reff_limit = 100000
-    ref_code = "sZzZDmsyEFPe5jg"
+    try:reff_limit = 100000 #int(input('\033[0m>>\033[1;32m Put Your Reff Amount: '))
+    except:print('\033[1;32m Input Wrong Default Reff Amaunt is 1m ');reff_limit=100000;time.sleep(1)
+    ref_code = "5rHpXmOOi4Ki5oL"#input("\033[0m>>\033[1;32m Input referral code : ")
     clear_screen();success_crt = 0
     for atm in range(reff_limit):
         try:
+            fake = Faker('it_IT')
             print(f'\r\r\033[0m>>\033[1;32m Possessing  {str(success_crt)}/{str(reff_limit)} complete : {((atm+1) / reff_limit) * 100:.2f}% ')
             domains = ["@gmail.com", "@outlook.com", "@yahoo.com", "@hotmail.com"]
             characters = string.ascii_letters + string.digits
-            username = str(''.join(random.choice(characters) for _ in range(12))).lower()
+            username = fake.profile().get('username')#str(''.join(random.choice(characters) for _ in range(12))).lower()
             password = str(''.join(random.choice(string.ascii_letters) for _ in range(6)) + 'Rc3@' + ''.join(random.choice(string.digits) for _ in range(3)))
-            email = f"{username}{str(random.choice(domains))}"
+            email = fake.profile().get('mail')#f"{username}{str(random.choice(domains))}"
             proxy_url = random.choice(proxy_list)
             captcha_token = get_token()
             response_data = reg_accaunt(email, password, username, ref_code, proxy_url, captcha_token)
@@ -124,13 +147,24 @@ def main():
                 #print(response_data)
                 if response_data['msg'] == 'Success':
                     print(f'\r\r\033[0m>>\033[1;32m Account Login Successfuly \033[0m')
+                    #print(response_data)
                     auth_token = response_data['data']['token']
+                    userid = response_data['data']['user_info']['uid']
+                    print(userid)
                     response_data = active_recent_accaunt(auth_token,proxy_url)
                     #print(response_data)
                     if response_data['msg'] == 'Success':
                          print(f'\r\r\033[0m>>\033[1;32m Successfuly Referral Done \033[0m')
-                         success_crt+=1
+                         #success_crt+=1
                          open('accaunts.txt','a').write(f"{str(email)}|{str(password)}|{str(auth_token)}\n");time.sleep(1)
+                         response_data = ping_accaunt(auth_token,userid,proxy_url)
+                         if response_data['msg'] == 'Success':
+                            print(f'\r\r\033[0m>>\033[1;32m Ping Account Successfuly \033[0m')
+                            print(f'{response_data}');time.sleep(1)
+                            success_crt+=1
+                         else:
+                            print(f'\r\r\033[1;31m Ping Account Failed \033[0m {response_data["msg"]}');time.sleep(1)
+                            linex()
                     else:
                         print(f'\r\r\033[1;31m Referral Error, Not Success \033[0m {response_data["msg"]}');time.sleep(1)
                         linex()
